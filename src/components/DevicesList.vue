@@ -7,7 +7,7 @@
       </div>
       <q-item v-for="port in serialports" :key="port.path" class="q-my-sm" clickable v-ripple @click="setDevice(port)">
         <q-item-section avatar>
-          <q-avatar icon="memory" color="blue" text-color="white" />
+          <q-avatar icon="memory" color="blue" text-color="white"/>
         </q-item-section>
 
         <q-item-section>
@@ -23,7 +23,9 @@
 <style></style>
 
 <script>
-const { SerialPort } = require('serialport')
+import {useSerialStore} from "stores/example-store";
+
+const {SerialPort} = require('serialport')
 
 const serialports = []
 
@@ -31,7 +33,8 @@ export default {
   data() {
     return {
       serialports,
-      noDevices: false
+      noDevices: false,
+      store: useSerialStore()
     }
   },
   methods: {
@@ -51,7 +54,7 @@ export default {
       })
     },
     setDevice(port) {
-      this.$store.commit('setPort', port);
+      this.store.port.path = port
       this.$router.push({
         name: "device"
       });
