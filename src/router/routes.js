@@ -1,12 +1,11 @@
 import DeviceView from "pages/DeviceView.vue";
+import IndexPage from "pages/IndexPage.vue";
 
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {path: '', component: () => import('pages/IndexPage.vue')}
-    ]
+    name: 'home',
+    component: IndexPage
   },
   {
     path: '/',

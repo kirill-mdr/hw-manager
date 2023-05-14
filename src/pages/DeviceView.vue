@@ -5,7 +5,7 @@
         <q-btn flat dense round aria-label="Home" to="/" icon="list"/>
 
         <q-toolbar-title>
-          <!--          {{ this.$store.state.port.manufacturer }}-->
+          {{ store.port.path.manufacturer }}
         </q-toolbar-title>
 
       </q-toolbar>
@@ -29,52 +29,45 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import DeviceActions from '../components/DeviceActions.vue'
+import {ref, onMounted, onUnmounted} from 'vue'
 
 const {SerialPort, ReadlineParser} = require('serialport')
-import {useSerialStore} from "stores/example-store";
+import {useSerialStore} from "stores/example-store"
 
-let serialport;
 
-export default {
-  components: {
-    DeviceActions
-  },
-  data() {
-    return {
-      timer: null,
-      portClosed: false,
+const portClosed = ref(false)
+const timer = ref(null)
+const store = useSerialStore()
+let serialport = null
+
+const writeCommand = (command) => {
+  serialport.write(command, function (err) {
+    if (err) {
+      return console.log('Error on write: ', err.message)
     }
-  },
-  methods: {
-    writeCommand(command) {
-      serialport.write(command, function (err) {
-        if (err) {
-          return console.log('Error on write: ', err.message)
-        }
-        console.log(command)
-      })
-    },
-    checkPortStatus() {
-      const parser = new ReadlineParser()
-      serialport.pipe(parser)
-      this.portClosed = !serialport.isOpen;
-    }
-  },
-  mounted() {
-    const store = useSerialStore()
-    // console.log("open serial: ", this.$store.state.port.path);
-    serialport = new SerialPort({path: store.port.path.path, baudRate: 9600})
-    console.log(store.port.path.path)
-    this.timer = setInterval(() => {
-      this.checkPortStatus()
-    }, 500)
-  },
-  unmounted() {
-    clearInterval(this.timer)
-    serialport.close()
-    // console.log("close serial: ", this.$store.state.port.path);
-  }
+    console.log(command)
+  })
 }
+
+const checkPortStatus = () => {
+  const parser = new ReadlineParser()
+  serialport.pipe(parser)
+  portClosed.value = !serialport.isOpen
+}
+
+onMounted(() => {
+  serialport = new SerialPort({path: store.port.path.path, baudRate: 9600})
+  store.serialport = serialport
+  timer.value = setInterval(() => {
+    checkPortStatus()
+  }, 500)
+})
+
+onUnmounted(() => {
+  clearInterval(timer.value)
+  serialport.close()
+})
+
 </script>

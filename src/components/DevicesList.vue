@@ -1,11 +1,12 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex flex-center ">
 
-    <q-list bordered padding class="rounded-borders" style="width: 350px; margin: 10px;">
-      <div v-if="noDevices">
+    <q-list bordered padding class="rounded-borders" style="width: 500px; margin: 10px;">
+      <div v-if="store.is_devices" class="devices-list">
         Zero Devices Connected
       </div>
-      <q-item v-for="port in serialports" :key="port.path" class="q-my-sm" clickable v-ripple @click="setDevice(port)">
+      <q-item v-for="port in store.serialList" :key="port.path" class="q-my-sm" clickable v-ripple
+              @click="setDevice(port)">
         <q-item-section avatar>
           <q-avatar icon="memory" color="blue" text-color="white"/>
         </q-item-section>
@@ -22,46 +23,27 @@
 
 <style></style>
 
-<script>
-import {useSerialStore} from "stores/example-store";
+<script setup>
+import {useSerialStore} from "stores/example-store"
+import {onMounted} from 'vue'
+import {useRouter} from 'vue-router'
 
-const {SerialPort} = require('serialport')
+const store = useSerialStore()
+const router = useRouter();
 
-const serialports = []
-
-export default {
-  data() {
-    return {
-      serialports,
-      noDevices: false,
-      store: useSerialStore()
-    }
-  },
-  methods: {
-    async listSerialPorts() {
-      await SerialPort.list().then((ports, err) => {
-        if (err != null || err === undefined) {
-          let devices = [];
-          for (const device of ports) {
-            if (device.productId !== undefined && device.vendorId !== undefined) {
-              devices.push(device);
-            }
-          }
-          this.noDevices = devices.length === 0;
-          this.serialports = devices;
-          console.log('ports: ', ports);
-        }
-      })
-    },
-    setDevice(port) {
-      this.store.port.path = port
-      this.$router.push({
-        name: "device"
-      });
-    },
-  },
-  async mounted() {
-    this.listSerialPorts()
-  },
+const setDevice = (port) => {
+  store.port.path = port
+  router.push({
+    name: "device"
+  });
 }
+
+onMounted(() => {
+  store.listSerialPorts()
+})
+
 </script>
+<style lang="sass">
+.devices-list
+  padding: 16px
+</style>

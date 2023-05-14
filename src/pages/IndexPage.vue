@@ -18,25 +18,18 @@
     </q-header>
 
     <q-page-container>
-      <DevicesList ref="devicesList" />
+      <DevicesList ref="devicesList"/>
     </q-page-container>
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import DevicesList from '../components/DevicesList.vue'
+import {useSerialStore} from "stores/example-store";
 
-export default {
-  name: 'LayoutDefault',
+const store = useSerialStore()
 
-  components: {
-    DevicesList
-  },
-  methods: {
-    refreshSerialPorts() {
-      this.$refs.devicesList.listSerialPorts();
-    }
-  }
-
+const refreshSerialPorts = () => {
+  store.listSerialPorts()
 }
 </script>
