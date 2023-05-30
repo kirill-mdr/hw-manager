@@ -9,7 +9,7 @@
         </q-badge>
         <q-slider
           v-model="store.settings.const_speed"
-          :min="5"
+          :min="0"
           :max="100"
           label
           :label-value="store.settings.const_speed + '%'"
@@ -38,7 +38,7 @@
         </q-badge>
         <q-range
           v-model="store.settings.speed_limits"
-          :min="5"
+          :min="0"
           :max="100"
           label
           :left-label-value="store.settings.speed_limits.min + '%'"
@@ -128,7 +128,6 @@ watch(() => store.settings, () => {
   if (timer.value) clearTimeout(timer.value)
   timer.value = setTimeout(() => {
     sendDataToSerialPort()
-    console.log('И нет 1000 запросов')
   }, 400)
 
 
