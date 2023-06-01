@@ -1,21 +1,21 @@
 # HW Manager (hw-manager)
 
-Hardware manager
+Программа для управления настройками устроства, позволяющего управлять аппратной частью персонального компьютера
 
-## Install the dependencies
+## Устанавливаем зависимости
 ```bash
 yarn
 # or
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Запуск окружения для разработки
 ```bash
 quasar dev
 ```
 
 
-### Lint the files
+### Использование Lint
 ```bash
 yarn lint
 # or
@@ -23,7 +23,7 @@ npm run lint
 ```
 
 
-### Format the files
+### Форматирование файлов
 ```bash
 yarn format
 # or
@@ -32,10 +32,7 @@ npm run format
 
 
 
-### Build the app for production
+### Сборка приложения
 ```bash
 quasar build
 ```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
